@@ -28,7 +28,6 @@ public class AuthUserDetailsService implements UserDetailsService {
                 () -> new UsernameNotFoundException(String.format("User %s not found", username))
         );
 
-        // todo починить конструктор, неправильно передавался объект, сейчас работает, но неправильно, возможно, ошибка все же здесь
         return AuthUser.builder()
                 .username(user.getUsername())
                 .password(user.getPasswordEntity().getPassword())
