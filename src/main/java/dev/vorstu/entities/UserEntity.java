@@ -1,6 +1,6 @@
 package dev.vorstu.entities;
 
-import dev.vorstu.dto.auth.Role;
+import dev.vorstu.dto.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,12 +15,13 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userEntity_id")
     private Long id;
 
     @Column(unique = true)
     private String username;
 
-    private boolean authorized;
+    private boolean enabled;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -29,4 +30,16 @@ public class UserEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "password_id", nullable = false)
     private PasswordEntity passwordEntity;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id")
+    private StudentEntity studentEntity;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teacher_id")
+    private TeacherEntity teacherEntity;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "admin_id")
+    private AdminEntity adminEntity;
 }

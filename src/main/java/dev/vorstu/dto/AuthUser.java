@@ -1,4 +1,4 @@
-package dev.vorstu.dto.auth;
+package dev.vorstu.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 @Builder
@@ -18,6 +17,6 @@ public class AuthUser implements UserDetails {
 
      private String password;
      private String username;
-     private boolean authorized;
+     private boolean enabled;
      private List<SimpleGrantedAuthority> authorities;
 }

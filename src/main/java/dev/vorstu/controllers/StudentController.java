@@ -13,7 +13,7 @@ import java.util.*;
 @RestController
 @RequestMapping("*api/base/")
 @CrossOrigin(origins = "http://localhost:4200")
-public class BaseController {
+public class StudentController {
 
     @Autowired
     private StudentRepository studentRepository;
