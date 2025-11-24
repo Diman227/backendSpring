@@ -1,12 +1,14 @@
 package dev.vorstu.services.auth;
 
-import dev.vorstu.dto.AuthUser;
+import dev.vorstu.dto.auth.AuthUser;
 import dev.vorstu.dto.auth.SignInRequest;
-import dev.vorstu.entities.PasswordEntity;
-import dev.vorstu.entities.StudentEntity;
-import dev.vorstu.entities.UserEntity;
-import dev.vorstu.repositories.UserRepository;
+import dev.vorstu.entities.*;
+import dev.vorstu.repositories.GroupRepository;
+import dev.vorstu.repositories.CredentialsRepository;
+import dev.vorstu.repositories.StudentRepository;
+import dev.vorstu.repositories.TeacherRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,11 +21,14 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final CredentialsRepository credentialsRepository;
+    private final GroupRepository groupRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(
+        CredentialsEntity user = credentialsRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException(String.format("User %s not found", username))
         );
 
@@ -40,14 +45,42 @@ public class AuthUserDetailsService implements UserDetailsService {
     // TODO на каком этапе вообще происходит присваивание пользователю какой-то из ролей
     public void createUser(SignInRequest request) {
 
-        UserEntity userEntity = UserEntity.builder()
+        CredentialsEntity credentialsEntity = CredentialsEntity.builder()
                 .username(request.getUsername())
                 .passwordEntity(new PasswordEntity(request.getPassword()))
                 .enabled(true)
                 .role(request.getRole())
                 .build();
 
-        userRepository.save(userEntity);
+        credentialsRepository.save(credentialsEntity);
+
+        switch (request.getRole().toString()) {
+
+            case "STUDENT":
+                GroupEntity groupEntity = groupRepository.findById(request.getGroupId()).orElseThrow();
+                StudentEntity student = StudentEntity.builder()
+                                .surname(request.getSurname())
+                                .name(request.getName())
+                                .patronymic(request.getPatronymic())
+                                .group(groupEntity)
+                                .linkedCredentials(credentialsEntity)
+                                .build();
+
+                studentRepository.save(student);
+                break;
+
+            case "TEACHER":
+                TeacherEntity teacher = TeacherEntity.builder()
+                                .surname(request.getSurname())
+                                .name(request.getName())
+                                .patronymic(request.getPatronymic())
+                                .linkedCredentials(credentialsEntity)
+                                .build();
+
+                teacherRepository.save(teacher);
+                break;
+        }
+
     }
 
 }

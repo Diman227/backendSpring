@@ -13,15 +13,15 @@ import lombok.*;
 @Table(name = "students")
 public class StudentEntity {
 
-    public StudentEntity(String surname, String name, String patronymic, GroupEntity group, String phoneNumber) {
+    public StudentEntity(String surname, String name, String patronymic, GroupEntity group) {
 
         this.surname = surname;
         this.name = name;
         this.patronymic = patronymic;
         this.group = group;
-        this.phoneNumber = phoneNumber;
     }
 
+    // TODO посмотреть чем GenerationType.AUTO отличается от IDENTITY, пишут, что второе лучше
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "student_id")
@@ -36,11 +36,11 @@ public class StudentEntity {
     @Column(name = "patronymic")
     private String patronymic;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private GroupEntity group;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credentials_id")
+    private CredentialsEntity linkedCredentials;
 }

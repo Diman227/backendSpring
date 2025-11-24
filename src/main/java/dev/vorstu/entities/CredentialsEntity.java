@@ -5,17 +5,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "credentials")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserEntity {
+
+// TODO Credentials
+public class CredentialsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "userEntity_id")
+    @Column(name = "credentials_id")
     private Long id;
 
     @Column(unique = true)
@@ -31,15 +33,4 @@ public class UserEntity {
     @JoinColumn(name = "password_id", nullable = false)
     private PasswordEntity passwordEntity;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "student_id")
-    private StudentEntity studentEntity;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacher_id")
-    private TeacherEntity teacherEntity;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "admin_id")
-    private AdminEntity adminEntity;
 }

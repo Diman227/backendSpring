@@ -1,4 +1,4 @@
-package dev.vorstu.dto;
+package dev.vorstu.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

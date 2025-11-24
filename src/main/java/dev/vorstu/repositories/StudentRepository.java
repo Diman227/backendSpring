@@ -10,11 +10,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface StudentRepository  extends PagingAndSortingRepository<StudentEntity, Long>, CrudRepository<StudentEntity, Long>  {
 
+    // TODO возвращает дубликаты почему-то(filter=ит)
     @Query("SELECT s FROM StudentEntity s WHERE " +
             "UPPER(s.surname) LIKE UPPER(CONCAT('%', :filter, '%')) OR " +
             "UPPER(s.name) LIKE UPPER(CONCAT('%', :filter, '%')) OR " +
             "UPPER(s.patronymic) LIKE UPPER(CONCAT('%', :filter, '%')) OR " +
-            "UPPER(s.group) LIKE UPPER(CONCAT('%', :filter, '%')) OR " +
-            "UPPER(s.phoneNumber) LIKE UPPER(CONCAT('%', :filter, '%'))")
+            "UPPER(s.group.nameOfGroup) LIKE UPPER(CONCAT('%', :filter, '%'))")
     Page<StudentEntity> getFilteredStudents(@Param("filter") String filter, Pageable pageable);
 }

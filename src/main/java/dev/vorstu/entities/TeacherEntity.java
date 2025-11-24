@@ -43,4 +43,8 @@ public class TeacherEntity {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "groupTeacher")
     private List<GroupEntity> groupsOfStudents;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credentials_id")
+    private CredentialsEntity linkedCredentials;
 }
