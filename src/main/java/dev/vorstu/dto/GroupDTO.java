@@ -12,6 +12,6 @@ import java.util.List;
 public class GroupDTO {
     private Long id;
     private String nameOfGroup;
-    private TeacherEntity teacherEntity;
+    private Long groupTeacherId;
     private List<StudentDTO> students;
 }

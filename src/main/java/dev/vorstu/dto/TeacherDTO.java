@@ -16,6 +16,7 @@ public class TeacherDTO {
     private String surname;
     private String name;
     private String patronymic;
+    // todo мб просто айди, но придется делать еще запрос на получение имен, а тут они сразу подтянутся
     private List<GroupNameDTO> groupsOfStudents;
 
 }

@@ -12,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 
-// TODO Credentials
 public class CredentialsEntity {
 
     @Id
@@ -33,4 +32,6 @@ public class CredentialsEntity {
     @JoinColumn(name = "password_id", nullable = false)
     private PasswordEntity passwordEntity;
 
+    //todo пришел к тому, как будто нужно было оставлять тут айди на сущности ролей,
+    // теперь не понимаю как из credentials получить определенного человека
 }

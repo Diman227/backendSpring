@@ -8,7 +8,6 @@ import dev.vorstu.repositories.CredentialsRepository;
 import dev.vorstu.repositories.StudentRepository;
 import dev.vorstu.repositories.TeacherRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,9 +39,6 @@ public class AuthUserDetailsService implements UserDetailsService {
                 .build();
     }
 
-    // TODO на этом этапе уже должен привязываться к учетным данным какой-то пользователь с определенной ролью
-    // TODO но как это сделать - ???, создать один супер-класс - ? || в запросе при создании уже как-то указывать роль
-    // TODO на каком этапе вообще происходит присваивание пользователю какой-то из ролей
     public void createUser(SignInRequest request) {
 
         CredentialsEntity credentialsEntity = CredentialsEntity.builder()
@@ -51,8 +47,6 @@ public class AuthUserDetailsService implements UserDetailsService {
                 .enabled(true)
                 .role(request.getRole())
                 .build();
-
-        credentialsRepository.save(credentialsEntity);
 
         switch (request.getRole().toString()) {
 
@@ -81,6 +75,7 @@ public class AuthUserDetailsService implements UserDetailsService {
                 break;
         }
 
+        credentialsRepository.save(credentialsEntity);
     }
 
 }

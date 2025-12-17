@@ -31,6 +31,7 @@ public class TokenManager {
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
+                .claim("role", userDetails.getAuthorities())
                 .signWith(getKey())
                 .compact();
     }

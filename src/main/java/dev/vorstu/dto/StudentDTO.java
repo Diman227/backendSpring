@@ -14,5 +14,7 @@ public class StudentDTO {
     private String surname;
     private String name;
     private String patronymic;
-    private String groupName;
+    private Long groupId;
+
+    private Long credentialId;
 }

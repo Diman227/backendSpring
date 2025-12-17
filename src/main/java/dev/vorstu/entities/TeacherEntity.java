@@ -1,5 +1,7 @@
 package dev.vorstu.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
@@ -41,10 +43,11 @@ public class TeacherEntity {
     @Column(name = "patronymic")
     private String patronymic;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "groupTeacher")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupTeacher")
+//    @JsonManagedReference
     private List<GroupEntity> groupsOfStudents;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "credentials_id")
     private CredentialsEntity linkedCredentials;
 }

@@ -10,4 +10,9 @@ public interface CredentialsRepository extends CrudRepository<CredentialsEntity,
 
     @Query("SELECT u FROM CredentialsEntity u JOIN FETCH u.passwordEntity WHERE u.username = :name")
     Optional<CredentialsEntity> findByUsername(String name);
+
+    @Query("SELECT u.id FROM CredentialsEntity u WHERE u.username = :name")
+    Long findIdByUsername(String name);
+
+
 }

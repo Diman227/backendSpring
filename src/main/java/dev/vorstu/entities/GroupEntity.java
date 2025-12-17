@@ -1,5 +1,6 @@
 package dev.vorstu.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,10 +41,12 @@ public class GroupEntity {
     @Column(name = "group_id")
     private Long id;
 
+    //todo unique , handle this exception
     private String nameOfGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
+//    @JsonBackReference
     private TeacherEntity groupTeacher;
 
     @OneToMany(mappedBy = "group")

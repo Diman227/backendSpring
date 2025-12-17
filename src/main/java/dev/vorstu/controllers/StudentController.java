@@ -10,6 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.webauthn.api.AuthenticatorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -17,31 +20,28 @@ import java.util.*;
 @RestController
 @RequestMapping("*api/base/")
 @CrossOrigin(origins = "http://localhost:4200")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class StudentController {
 
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private StudentService studentService;
+    private final StudentService studentService;
 
     @PostMapping(value = "students", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public void addStudent(@RequestBody StudentDTO newStudent) {
-        studentService.addStudent(newStudent);
+    public StudentDTO addStudent(@RequestBody StudentDTO newStudent) {
+        return studentService.addStudent(newStudent);
+    }
+
+    @GetMapping(value = "student/group", produces = MediaType.APPLICATION_JSON_VALUE)
+    public StudentDTO getStudent(Long studentId){
+        return studentService.getStudentById(studentId);
     }
 
     @GetMapping(value = "students", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('TEACHER')")
     public Page<StudentDTO> loadStudentsPage(Pageable pageable) {
         return studentService.getStudentsPerPage(pageable);
     }
 
     @PatchMapping(value = "students", produces = MediaType.APPLICATION_JSON_VALUE)
-    public StudentDTO updateStudent(@RequestBody StudentDTO changingStudent) {
-        return studentService.updateStudent(changingStudent);
-    }
+    public StudentDTO updateStudent(@RequestBody StudentDTO changingStudent) {return studentService.updateStudent(changingStudent);}
 
     @DeleteMapping(value = "students/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Long deleteStudent(@PathVariable("id") Long id) {
@@ -53,10 +53,17 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
-    // можно попробовать сделать все в один маппинг, но при каждом получении всех студентов будут отправляться запросы с пустым фильтром в бд
     @GetMapping(value = "students/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<StudentDTO> getFilteredStudents(@RequestParam(defaultValue = "", required = false) String filter, Pageable pageable) {
-      return studentService.getFilteredStudents(filter, pageable);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Username: " + authentication.getName());
+        System.out.println("Authorities: " + authentication.getAuthorities());
+        System.out.println("Principal: " + authentication.getPrincipal());
+        System.out.println("Class: " + authentication.getClass());
+        return studentService.getFilteredStudents(filter, pageable);
     }
+
+    // todo админ может создать студента, но что делать с его учеткой?
+    // todo как получить студента с логина
 
 }

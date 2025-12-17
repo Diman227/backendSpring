@@ -15,4 +15,9 @@ public interface GroupRepository extends CrudRepository<GroupEntity, Long> {
 
     @Query("SELECT g FROM GroupEntity g WHERE g.id IN :ids")
     List<GroupEntity> getGroupsByIds(@Param("ids") List<Long> ids);
+
+    // TODO как тут поступить, мне надо выбрать только названия групп с айдишниками для отображения в комбобокс
+    @Query("SELECT g FROM GroupEntity g")
+    List<GroupEntity> getAllGroupNames();
+
 }

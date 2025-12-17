@@ -21,12 +21,17 @@ public class StudentService {
     private final GroupRepository groupRepository;
     private final StudentMapper studentMapper;
 
-    public void addStudent(StudentDTO studentDTO) {
+    public StudentDTO addStudent(StudentDTO studentDTO) {
+
+        if(studentDTO.getId() != null && studentRepository.existsById(studentDTO.getId())) {
+            throw new RuntimeException("Студент с id " + studentDTO.getId() + " уже существует!");
+        }
 
         StudentEntity newStudent = studentMapper.toStudentEntity(studentDTO);
-        GroupEntity group = getStudentGroup(studentDTO.getGroupName());
+        GroupEntity group = groupRepository.findById(studentDTO.getGroupId()).orElseThrow();
         newStudent.setGroup(group);
-        studentRepository.save(newStudent);
+        newStudent.setId(null);
+        return studentMapper.toStudentDTO(studentRepository.save(newStudent));
     }
 
     public Page<StudentDTO> getStudentsPerPage(Pageable pageable) {
@@ -34,22 +39,37 @@ public class StudentService {
     }
 
     public StudentDTO updateStudent(StudentDTO studentDTO) {
-        StudentEntity newStudent = studentRepository.findById(studentDTO.getId()).orElseThrow();
-        GroupEntity group = getStudentGroup(studentDTO.getGroupName());
-        newStudent.setGroup(group);
-        return studentMapper.toStudentDTO(studentRepository.save(newStudent));
+
+        if(!studentRepository.existsById(studentDTO.getId())) {
+            throw new RuntimeException("Студента с id - " + studentDTO.getId() + " не существует");
+        }
+
+        StudentEntity changingStudent = studentMapper.toStudentEntity(studentDTO);
+        GroupEntity group = groupRepository.findById(studentDTO.getGroupId()).orElseThrow();
+        changingStudent.setGroup(group);
+        return studentMapper.toStudentDTO(studentRepository.save(changingStudent));
     }
 
-    public GroupEntity getStudentGroup(String groupName){
-        return groupRepository.getGroupByName(groupName).orElseThrow();
+    public GroupEntity getStudentGroup(Long groupId){
+        return groupRepository.findById(groupId).orElseThrow();
     }
 
     public StudentDTO getStudentById(Long id){
+
+        if(id == null){
+            throw new RuntimeException("Id не может быть равно нулю");
+        }
+
         StudentEntity student = studentRepository.findById(id).orElseThrow();
         return studentMapper.toStudentDTO(student);
     }
 
     public Long deleteStudent(Long id){
+
+        if(!studentRepository.existsById(id)){
+            throw new RuntimeException("Студента с id - " + id + " не существует");
+        }
+
         studentRepository.deleteById(id);
         return id;
     }
