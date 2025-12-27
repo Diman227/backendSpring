@@ -1,5 +1,7 @@
 package dev.vorstu.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,11 +12,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDTO {
-    private Long id;
-    private String surname;
-    private String name;
-    private String patronymic;
-    private Long groupId;
 
-    private Long credentialId;
+    @Positive
+    private Long id;
+
+    @NotNull
+    private String surname;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private String patronymic;
+
+    @Positive
+    @NotNull
+    private Long groupId;
 }

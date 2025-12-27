@@ -24,5 +24,7 @@ public interface GroupMapper {
 
     List<GroupNameDTO> toListGroupNameDTOs(List<GroupEntity> listOfGroupEntities);
 
+    List<GroupDTO> toListGroupDTOs(List<GroupEntity> groups);
+
 
 }

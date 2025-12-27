@@ -13,7 +13,6 @@ import java.util.List;
 public interface StudentMapper {
 
     @Mapping(target = "groupId", source = "group.id")
-    @Mapping(target = "credentialId", source = "linkedCredentials.id")
     StudentDTO toStudentDTO(StudentEntity studentEntity);
 
     // Группа присваивается в сервисе

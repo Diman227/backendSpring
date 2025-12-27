@@ -31,11 +31,15 @@ public class Initializer {
         authUserDetailsService.createUser(new SignInRequest("student4", "student", "Васильев", "Василий", "Васильевич", group4.getId(), Role.STUDENT));
         authUserDetailsService.createUser(new SignInRequest("student5", "student", "Борисов", "Борис", "Борисович", group1.getId(), Role.STUDENT));
         authUserDetailsService.createUser(new SignInRequest("student6", "student", "Алексеев", "Алексей", "Алексеевич", group1.getId(), Role.STUDENT));
+        authUserDetailsService.createUser(new SignInRequest("student7", "student", "Чебупели", "Гриша", "Иванович", group1.getId(), Role.STUDENT));
+        authUserDetailsService.createUser(new SignInRequest("student8", "student", "Нечаев", "Боря", "Борисович", group1.getId(), Role.STUDENT));
+        authUserDetailsService.createUser(new SignInRequest("student9", "student", "Долин", "Глеб", "Петрович", group2.getId(), Role.STUDENT));
+        authUserDetailsService.createUser(new SignInRequest("student10", "student", "Борисов", "Михаил", "Никитыч", group2.getId(), Role.STUDENT));
 
         authUserDetailsService.createUser(new SignInRequest("teacher1", "teacher", "Павлова", "Лидия", "Лидия", group1.getId(), Role.TEACHER));
         authUserDetailsService.createUser(new SignInRequest("teacher2", "teacher", "Петрова", "Надежда", "Викторовна", group2.getId(), Role.TEACHER));
         authUserDetailsService.createUser(new SignInRequest("teacher3", "teacher", "Молодцова", "Наталья", "Алексеевна", group3.getId(), Role.TEACHER));
-        authUserDetailsService.createUser(new SignInRequest("teacher4", "teacher", "Иванов", "Павел", "Никитыч", group5.getId(), Role.TEACHER));
+        authUserDetailsService.createUser(new SignInRequest("teacher4", "teacher", "Иванов", "Павел", "Никитыч", group4.getId(), Role.TEACHER));
         authUserDetailsService.createUser(new SignInRequest("teacher5", "teacher", "Палкин", "Василий", "Александрович", group5.getId(), Role.TEACHER));
 
         authUserDetailsService.createUser(new SignInRequest("admin", "admin", null, null, null, null, Role.ADMIN));

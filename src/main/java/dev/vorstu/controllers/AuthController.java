@@ -4,6 +4,7 @@ import dev.vorstu.dto.UserDTO;
 import dev.vorstu.dto.auth.SignInRequest;
 import dev.vorstu.dto.auth.TokenRequest;
 import dev.vorstu.dto.auth.TokenResponse;
+import dev.vorstu.entities.CredentialsEntity;
 import dev.vorstu.mappers.UserMapper;
 import dev.vorstu.repositories.CredentialsRepository;
 import dev.vorstu.repositories.StudentRepository;
@@ -16,6 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,7 +73,7 @@ public class AuthController {
             return this.userMapper.TeacherEntityToUserDTO(this.teacherRepository.getTeacherByCredentials(credentialsId).orElseThrow());
         }
         else {
-            return  null;
+            return null;
         }
     }
 }

@@ -72,6 +72,9 @@ public class AuthUserDetailsService implements UserDetailsService {
                                 .build();
 
                 teacherRepository.save(teacher);
+                GroupEntity group = groupRepository.findById(request.getGroupId()).orElseThrow();
+                group.setGroupTeacher(teacher);
+                groupRepository.save(group);
                 break;
         }
 

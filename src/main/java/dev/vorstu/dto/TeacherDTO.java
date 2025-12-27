@@ -1,5 +1,7 @@
 package dev.vorstu.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeacherDTO {
+
+    @Positive
+    @NotNull
     private Long id;
+
     private String surname;
     private String name;
     private String patronymic;

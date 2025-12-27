@@ -12,6 +12,7 @@ import dev.vorstu.repositories.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,23 +24,14 @@ public class GroupService {
     private final GroupMapper groupMapper;
     private final TeacherMapper teacherMapper;
 
+    // todo может для таких случаев вообще другие dto нужны?
     public GroupDTO addGroup(GroupDTO groupDTO){
-        //todo remove check
-        if(groupRepository.existsById(groupDTO.getId())){
-            throw new RuntimeException("Группа с id - " + groupDTO.getId() + " уже существует");
-        }
 
         GroupEntity group = groupMapper.toGroupEntity(groupDTO);
-        group.setId(null); // todo check
         return groupMapper.toGroupDTO(groupRepository.save(group));
     }
 
     public GroupDTO getGroupById(Long id){
-
-        //todo use spring validation in controller (@Validated)
-        if(id == null){
-            throw new RuntimeException("Id не может быть равно нулю");
-        }
 
         GroupEntity group = groupRepository.findById(id).orElseThrow(() -> new RuntimeException("Группы с id - " + id + " не существует"));
         return groupMapper.toGroupDTO(group);
@@ -47,19 +39,11 @@ public class GroupService {
 
     public Long deleteGroup(Long id){
 
-        if(id == null){
-            throw new RuntimeException("Группы с id - " + id + " не существует");
-        }
-
         groupRepository.deleteById(id);
         return id;
     }
 
     public GroupDTO updateGroup(GroupDTO groupDTO){
-        //todo remove check
-        if(!groupRepository.existsById(groupDTO.getId())){
-            throw new RuntimeException("Учителя с id - " + groupDTO.getId() + " не существует");
-        }
 
         GroupEntity group = groupMapper.toGroupEntity(groupDTO);
         return groupMapper.toGroupDTO(groupRepository.save(group));
@@ -67,17 +51,11 @@ public class GroupService {
 
     public GroupDTO addTeacherToGroup(Long groupId, TeacherDTO teacherDTO){
 
-        if(groupId == null){
-            throw new RuntimeException("ID не может равняться нулю");
-        }
-
-        //todo hibernate n+1, join fetch
-        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Группы с id - " + groupId + " не существует"));
+        GroupEntity group = groupRepository.getGroupWithTeacher(groupId).orElseThrow(() -> new RuntimeException("Группы с id - " + groupId + " не существует"));
 
         if(group.getGroupTeacher() != null) {
             throw new RuntimeException("Учитель у группы с id - " + groupId + " уже существует");
         }
-
 
         TeacherEntity teacher = teacherRepository.findById(teacherDTO.getId()).orElseThrow(() -> new RuntimeException("Учителя с id - " + teacherDTO.getId() + " не существует"));
         //todo setGroupTeacherId ,  teacherRepository.findById remove
@@ -90,4 +68,9 @@ public class GroupService {
         return groupMapper.toListGroupNameDTOs(groupRepository.getAllGroupNames());
     }
 
+    public List<GroupDTO> getAllGroups() {
+        List<GroupEntity> groupEntities = new ArrayList<>();
+        this.groupRepository.findAll().forEach(groupEntities::add);
+        return this.groupMapper.toListGroupDTOs(groupEntities);
+    }
 }

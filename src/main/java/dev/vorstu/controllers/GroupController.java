@@ -4,9 +4,11 @@ import dev.vorstu.dto.GroupDTO;
 import dev.vorstu.dto.GroupNameDTO;
 import dev.vorstu.dto.TeacherDTO;
 import dev.vorstu.services.GroupService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +27,14 @@ public class GroupController {
         return groupService.addGroup(groupDTO);
     }
 
-    // todo при загрузке студента будет два запроса
     @GetMapping(value = "groups/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public GroupDTO getGroupById(@PathVariable("id") Long id){
+    public GroupDTO getGroupById(@PathVariable("id") @Validated Long id){
         return groupService.getGroupById(id);
+    }
+
+    @GetMapping(value = "groups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<GroupDTO> getAllGroups(){
+        return groupService.getAllGroups();
     }
 
     @GetMapping(value = "groups/names", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,21 +44,21 @@ public class GroupController {
 
     @DeleteMapping(value = "groups/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public Long deleteGroup(@PathVariable("id") Long id) {
+    public Long deleteGroup(@PathVariable("id") @NotNull Long id) {
         return groupService.deleteGroup(id);
     }
 
     @PatchMapping(value = "groups", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public GroupDTO updateGroup(GroupDTO groupDTO){
+    public GroupDTO updateGroup(@Validated @RequestBody GroupDTO groupDTO){
         return groupService.updateGroup(groupDTO);
     }
 
     // todo /{id}/{teacherId} - норм или не норм?
     @PostMapping(value = "group/{id}/teacher", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public GroupDTO addTeacherToGroup(@PathVariable("id") Long groupId, @RequestBody TeacherDTO teacherDTO){
+    public GroupDTO addTeacherToGroup(@PathVariable("id") @NotNull Long groupId, @RequestBody @Validated TeacherDTO teacherDTO){
         return groupService.addTeacherToGroup(groupId, teacherDTO);
     }
-
+    
 }

@@ -20,4 +20,7 @@ public interface GroupRepository extends CrudRepository<GroupEntity, Long> {
     @Query("SELECT g FROM GroupEntity g")
     List<GroupEntity> getAllGroupNames();
 
+    @Query( "SELECT g FROM GroupEntity g JOIN FETCH g.groupTeacher " +
+            "WHERE g.id = :groupId")
+    Optional<GroupEntity> getGroupWithTeacher(@Param("groupId") Long groupId);
 }

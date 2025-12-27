@@ -42,11 +42,11 @@ public class GroupEntity {
     private Long id;
 
     //todo unique , handle this exception
+    @Column(unique = true, nullable = false)
     private String nameOfGroup;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
-//    @JsonBackReference
     private TeacherEntity groupTeacher;
 
     @OneToMany(mappedBy = "group")

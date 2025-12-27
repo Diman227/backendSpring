@@ -25,10 +25,6 @@ public class TeacherService {
 
     public TeacherDTO addTeacher(TeacherDTO teacherDTO){
 
-        if(teacherRepository.existsById(teacherDTO.getId())){
-            throw new RuntimeException("Учителя с id - " + teacherDTO.getId() + " уже существует");
-        }
-
         TeacherEntity teacherEntity = teacherMapper.toTeacherEntity(teacherDTO);
         if(teacherDTO.getGroupsOfStudents() != null){
             teacherEntity.setGroupsOfStudents(toListGroupEntities(teacherDTO.getGroupsOfStudents()));
@@ -38,19 +34,11 @@ public class TeacherService {
 
     public Long deleteTeacher(Long id){
 
-        if(!teacherRepository.existsById(id)){
-            throw new RuntimeException("Учителя с id - " + id + " не существует");
-        }
-
         teacherRepository.deleteById(id);
         return id;
     }
 
     public TeacherDTO updateTeacher(TeacherDTO teacherDTO){
-
-        if(!teacherRepository.existsById(teacherDTO.getId())){
-            throw new RuntimeException("Учителя с id - " + teacherDTO.getId() + " не существует");
-        }
 
         TeacherEntity teacherEntity = teacherMapper.toTeacherEntity(teacherDTO);
         teacherEntity.setGroupsOfStudents(toListGroupEntities(teacherDTO.getGroupsOfStudents()));
@@ -69,19 +57,20 @@ public class TeacherService {
 
     public TeacherDTO getTeacherById(Long id){
 
-        if(id == null){
-            throw new RuntimeException("Id не может быть равно нулю");
-        }
         TeacherEntity teacherEntity = teacherRepository.findById(id).orElseThrow();
         return teacherMapper.toTeacherDTO(teacherEntity);
     }
 
     public List<GroupNameDTO> getTeacherGroups(Long teacherId){
-        if (teacherId == null){
-            throw new RuntimeException("Id не может быть равно нулю");
-        }
+
         List<GroupEntity> groups = this.teacherRepository.getTeacherGroups(teacherId).orElseThrow();
         return this.groupMapper.toListGroupNameDTOs(groups);
+    }
+
+    public List<TeacherDTO> getAllTeachers() {
+        List<TeacherEntity> teacherEntities = new ArrayList<TeacherEntity>();
+        this.teacherRepository.findAll().forEach(teacherEntities::add);
+        return this.teacherMapper.toListTeacherDTO(teacherEntities);
     }
 
 }
